@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Help Requests</h2>
+
+<ul>
+    {% for req in requests %}
+        <li>
+            <strong>{{ req.title }}</strong>
+            - {{ req.status }}
+
+            {% if request.user.role == 'admin' %}
+                | <a href="{% url 'assign_case' req.pk %}">Assign</a>
+            {% endif %}
+
+            {% if request.user.role != 'admin' %}
+                | <a href="{% url 'case_chat' req.pk %}">Chat</a>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>No requests available.</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'dashboard' %}">Back</a>
+{% endblock %}
+

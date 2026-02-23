@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h2>Admin Dashboard</h2>
+    <p>Welcome, {{ request.user.username }}</p>
+    <a href="{% url 'admin_requests' %}">View All Help Requests</a>
+    <br>
+</body>
+</html>
+{% endblock %}

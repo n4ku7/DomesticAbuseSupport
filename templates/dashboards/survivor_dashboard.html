@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Survivor Dashboard</h2>
+
+<p>Welcome, {{ request.user.username }}</p>
+
+<hr>
+
+<a href="{% url 'create_request' %}">Create Help Request</a>
+<br><br>
+<a href="{% url 'my_requests' %}">View My Requests</a>
+<br><br>
+<a href="{% url 'logout' %}">Logout</a>
+{% endblock %}
