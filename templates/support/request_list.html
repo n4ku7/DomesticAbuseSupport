@@ -1,26 +1,36 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Help Requests</h2>
+<section class="card">
+    <h2 class="title">Help Requests</h2>
+    <p class="subtitle">Track request status and quickly take the next action.</p>
 
-<ul>
-    {% for req in requests %}
-        <li>
-            <strong>{{ req.title }}</strong>
-            - {{ req.status }}
+    <ul class="list">
+        {% for req in requests %}
+            <li class="list-item">
+                <strong>{{ req.title }}</strong>
+                <div class="spacer-sm"></div>
+                <span class="badge {% if req.status|lower == 'open' %}badge-open{% elif req.status|lower == 'pending' %}badge-pending{% else %}badge-default{% endif %}">
+                    {{ req.status }}
+                </span>
+                <div class="inline-actions">
+                    {% if request.user.role == 'admin' %}
+                        <a href="{% url 'assign_case' req.pk %}" class="btn btn-secondary">Assign</a>
+                    {% endif %}
 
-            {% if request.user.role == 'admin' %}
-                | <a href="{% url 'assign_case' req.pk %}">Assign</a>
-            {% endif %}
+                    {% if request.user.role != 'admin' %}
+                        <a href="{% url 'case_chat' req.pk %}" class="btn btn-secondary">Open Chat</a>
+                    {% endif %}
+                </div>
+            </li>
+        {% empty %}
+            <li class="list-item empty-state">No requests available.</li>
+        {% endfor %}
+    </ul>
 
-            {% if request.user.role != 'admin' %}
-                | <a href="{% url 'case_chat' req.pk %}">Chat</a>
-            {% endif %}
-        </li>
-    {% empty %}
-        <li>No requests available.</li>
-    {% endfor %}
-</ul>
-<a href="{% url 'dashboard' %}">Back</a>
+    <div class="actions">
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back</a>
+    </div>
+</section>
 {% endblock %}
 

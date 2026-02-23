@@ -1,17 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
-    <h2>Login</h2>
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="card">
+    <h2 class="title">Welcome Back</h2>
+    <p class="subtitle">Sign in to continue accessing secure support services.</p>
 
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Login</button>
+        <div class="actions">
+            <button type="submit">Login</button>
+            <a href="{% url 'register' %}" class="btn btn-secondary">New Survivor? Register</a>
+        </div>
     </form>
-    <br><hr><br>
-    <a href="{% url 'register' %}">New Survivor? Register here</a>
-</body>
-</html>
+</section>
+{% endblock %}

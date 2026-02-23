@@ -1,50 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Domestic Violence Support System</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-        }
-
-        nav {
-            margin-bottom: 20px;
-        }
-
-        nav a {
-            margin-right: 15px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        hr {
-            margin: 20px 0;
-        }
-
-        .container {
-            max-width: 800px;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
 </head>
 <body>
+    <div class="page-shell">
+        <header class="topbar">
+            <div class="brand">DV Support System</div>
+            {% if request.user.is_authenticated %}
+                <nav class="nav-links">
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    <span class="user-chip">{{ request.user.username }} ({{ request.user.role|title }})</span>
+                    <form method="post" action="{% url 'logout' %}" class="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-danger">Logout</button>
+                    </form>
+                </nav>
+            {% else %}
+                <nav class="nav-links">
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'register' %}" class="btn btn-secondary">Register</a>
+                </nav>
+            {% endif %}
+        </header>
 
-    <nav>
-        {% if request.user.is_authenticated %}
-            <a href="{% url 'dashboard' %}">Dashboard</a>
-            <form method="post" action="{% url 'logout' %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit">Logout</button>
-            </form>
-        {% endif %}
-    </nav>
-
-    <hr>
-
-    <div class="container">
-        {% block content %}
-        {% endblock %}
+        <main class="content">
+            {% block content %}
+            {% endblock %}
+        </main>
     </div>
-
 </body>
 </html>

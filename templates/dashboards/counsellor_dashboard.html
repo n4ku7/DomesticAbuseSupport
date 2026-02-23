@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Counsellor Dashboard</h2>
-<p>Welcome, {{ request.user.username }}</p>
-<a href="{% url 'assigned_cases' %}">View Assigned Cases</a>
-<br>
-<a href="{% url 'logout' %}">Logout</a>
+<section class="card">
+	<h2 class="title">Counsellor Dashboard</h2>
+	<p class="subtitle">Welcome, {{ request.user.username }}. Stay connected to your assigned survivors and active cases.</p>
+	<div class="actions">
+		<a href="{% url 'assigned_cases' %}" class="btn">View Assigned Cases</a>
+	</div>
+</section>
 {% endblock %}

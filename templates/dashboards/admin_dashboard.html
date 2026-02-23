@@ -1,16 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Dashboard</title>
-</head>
-<body>
-    <h2>Admin Dashboard</h2>
-    <p>Welcome, {{ request.user.username }}</p>
-    <a href="{% url 'admin_requests' %}">View All Help Requests</a>
-    <br>
-</body>
-</html>
+<section class="card">
+    <h2 class="title">Admin Dashboard</h2>
+    <p class="subtitle">Welcome, {{ request.user.username }}. Manage and coordinate all support requests from one place.</p>
+    <div class="actions">
+        <a href="{% url 'admin_requests' %}" class="btn">View All Help Requests</a>
+    </div>
+</section>
 {% endblock %}

@@ -1,26 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Case Chat</h2>
+<section class="card">
+    <h2 class="title">Case Chat</h2>
+    <p class="subtitle">{{ help_request.title }}</p>
 
-<h3>{{ help_request.title }}</h3>
+    <div class="chat-box">
+        {% for msg in messages %}
+            <div class="chat-bubble">
+                <span class="chat-author">{{ msg.sender.username }}:</span>
+                <span>{{ msg.get_decoded_message }}</span>
+            </div>
+        {% empty %}
+            <p class="empty-state">No messages yet.</p>
+        {% endfor %}
+    </div>
 
-<div>
-    {% for msg in messages %}
-        <p>
-            <strong>{{ msg.sender.username }}:</strong>
-            {{ msg.get_decoded_message }}
-        </p>
-    {% empty %}
-        <p>No messages yet.</p>
-    {% endfor %}
-</div>
-
-<form method="post">
-    {% csrf_token %}
-    <textarea name="content" required></textarea>
-    <br>
-    <button type="submit">Send</button>
-</form>
-<a href="{% url 'dashboard' %}">Back</a>
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="content" required placeholder="Type your message..."></textarea>
+        <div class="actions">
+            <button type="submit">Send</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back</a>
+        </div>
+    </form>
+</section>
 {% endblock %}
