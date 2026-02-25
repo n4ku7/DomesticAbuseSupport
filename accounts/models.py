@@ -4,6 +4,11 @@ from django.db import models
 
 class CustomUser(AbstractUser):
 
+    email = models.EmailField(
+        blank=True,
+        null=True
+    )
+
     ROLE_CHOICES = (
         ('admin', 'Admin'),
         ('survivor', 'Survivor'),

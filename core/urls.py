@@ -7,6 +7,9 @@ from .views import dashboard_router
 def dashboard_router(request):
     user = request.user
 
+    if user.is_superuser or user.is_staff:
+        return render(request, 'dashboards/admin_dashboard.html')
+
     if user.role == 'admin':
         return render(request, 'dashboards/admin_dashboard.html')
 
