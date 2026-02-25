@@ -3,6 +3,7 @@ from django.views.generic import CreateView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login
 from .forms import SurvivorRegistrationForm, EmailOrUsernameAuthenticationForm
+from .bootstrap import ensure_bootstrap_admin
 
 
 class SurvivorRegisterView(CreateView):
@@ -19,3 +20,7 @@ class SurvivorRegisterView(CreateView):
 class CustomLoginView(LoginView):
     template_name = 'accounts/login.html'
     authentication_form = EmailOrUsernameAuthenticationForm
+
+    def dispatch(self, request, *args, **kwargs):
+        ensure_bootstrap_admin()
+        return super().dispatch(request, *args, **kwargs)
