@@ -33,6 +33,9 @@ class CaseChatView(LoginRequiredMixin, View):
 
         receiver = self._get_receiver(request.user, help_request)
 
+        if not receiver or not content:
+            raise PermissionDenied
+
         Message.objects.create(
             help_request=help_request,
             sender=request.user,
@@ -43,19 +46,25 @@ class CaseChatView(LoginRequiredMixin, View):
         return redirect('case_chat', pk=pk)
 
     def _has_access(self, user, help_request):
+        assignment = getattr(help_request, 'assignment', None)
+
         if user.role == 'survivor':
             return help_request.survivor == user
 
         if user.role == 'counsellor':
-            return help_request.assignment.counsellor == user
+            return bool(assignment and assignment.counsellor == user)
 
         if user.role == 'legal_advisor':
-            return help_request.assignment.legal_advisor == user
+            return bool(assignment and assignment.legal_advisor == user)
 
         return False
 
     def _get_receiver(self, user, help_request):
+        assignment = getattr(help_request, 'assignment', None)
+
         if user.role == 'survivor':
-            return help_request.assignment.counsellor or help_request.assignment.legal_advisor
+            if assignment:
+                return assignment.counsellor or assignment.legal_advisor
+            return None
 
         return help_request.survivor
