@@ -139,6 +139,10 @@ a:hover {
     flex-wrap: wrap;
 }
 
+.inline-form {
+    margin: 0;
+}
+
 .inline-actions {
     margin-top: 10px;
 }
@@ -245,6 +249,101 @@ textarea:focus {
     padding: 14px;
     background: var(--surface-soft);
     transition: transform 0.16s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.list-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.stat-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    background: var(--surface-soft);
+}
+
+.stat-card h3 {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.84rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.stat-card p {
+    margin: 8px 0 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.feature-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    background: var(--surface-soft);
+}
+
+.feature-card h4 {
+    margin: 0 0 8px;
+    color: var(--primary);
+}
+
+.feature-card p {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.hero-card {
+    margin-bottom: 18px;
+}
+
+.section-title {
+    margin: 0 0 14px;
+    color: var(--primary);
+}
+
+.stack-block {
+    margin-top: 18px;
+}
+
+.filter-bar {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto auto;
+    gap: 10px;
+    margin-bottom: 16px;
+    align-items: center;
+}
+
+.pagination {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.page-indicator {
+    color: var(--text-muted);
+    font-weight: 600;
 }
 
 .list-item:hover {
@@ -366,6 +465,10 @@ textarea:focus-visible {
     .actions,
     .inline-actions {
         width: 100%;
+    }
+
+    .filter-bar {
+        grid-template-columns: 1fr;
     }
 
     .btn,

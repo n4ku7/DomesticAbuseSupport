@@ -20,5 +20,5 @@ class CaseAssignmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['counsellor'].queryset = User.objects.filter(role='counsellor')
-        self.fields['legal_advisor'].queryset = User.objects.filter(role='legal_advisor')
+        self.fields['counsellor'].queryset = User.objects.filter(role='counsellor', is_active=True)
+        self.fields['legal_advisor'].queryset = User.objects.filter(role='legal_advisor', is_active=True)

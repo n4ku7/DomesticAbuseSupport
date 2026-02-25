@@ -1,13 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.db import connection
-
-
-def home_redirect(request):
-    return redirect('login')
-
 
 def health_check(request):
     try:
@@ -28,11 +22,11 @@ def health_check(request):
 
 
 urlpatterns = [
-    path('', home_redirect),
+    path('', include('core.urls')),
     path('health/', health_check, name='health_check'),
     path('', include('accounts.urls')),
-    path('', include('core.urls')),
     path('', include('support.urls')),
     path('', include('communication.urls')),
+    path('', include('resources.urls')),
     path('admin/', admin.site.urls),
 ]

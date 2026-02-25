@@ -3,12 +3,11 @@ from django.views.generic import CreateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import HelpRequest
 from .forms import HelpRequestForm
-from accounts.mixins import SurvivorRequiredMixin
+from accounts.mixins import SurvivorRequiredMixin, AdminRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
-from accounts.mixins import SurvivorRequiredMixin
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CaseAssignmentForm
 from django.views import View
+from django.core.exceptions import PermissionDenied
 
 
 class CreateHelpRequestView(LoginRequiredMixin, SurvivorRequiredMixin, CreateView):
@@ -27,20 +26,19 @@ class SurvivorRequestListView(LoginRequiredMixin, SurvivorRequiredMixin, ListVie
     def get_queryset(self):
         return HelpRequest.objects.filter(survivor=self.request.user)
     
-class AssignCaseView(LoginRequiredMixin, View):
+class AssignCaseView(LoginRequiredMixin, AdminRequiredMixin, View):
     template_name = 'support/assign_case.html'
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.role != 'admin':
-            from django.core.exceptions import PermissionDenied
-            raise PermissionDenied
-        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, pk):
         help_request = get_object_or_404(HelpRequest, pk=pk)
-        form = CaseAssignmentForm()
+        assignment = getattr(help_request, 'assignment', None)
+        form = CaseAssignmentForm(instance=assignment)
         return render(request, self.template_name, {'form': form, 'help_request': help_request})
+
     def post(self, request, pk):
         help_request = get_object_or_404(HelpRequest, pk=pk)
-        form = CaseAssignmentForm(request.POST)
+        assignment = getattr(help_request, 'assignment', None)
+        form = CaseAssignmentForm(request.POST, instance=assignment)
         if form.is_valid():
             assignment = form.save(commit=False)
             assignment.help_request = help_request
@@ -56,8 +54,8 @@ class AdminRequestListView(LoginRequiredMixin, ListView):
     template_name = 'support/request_list.html'
     context_object_name = 'requests'
     def get_queryset(self):
-        if self.request.user.role != 'admin':
-            from django.core.exceptions import PermissionDenied
+        user = self.request.user
+        if not (user.role == 'admin' or user.is_superuser or user.is_staff):
             raise PermissionDenied
         return HelpRequest.objects.all()
     
@@ -80,5 +78,27 @@ class AssignedCaseListView(LoginRequiredMixin, ListView):
             )
 
         else:
-            from django.core.exceptions import PermissionDenied
             raise PermissionDenied
+
+
+class CloseAssignedCaseView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        user = request.user
+        if user.role not in ['counsellor', 'legal_advisor']:
+            raise PermissionDenied
+
+        help_request = get_object_or_404(HelpRequest, pk=pk)
+        assignment = getattr(help_request, 'assignment', None)
+        if not assignment:
+            raise PermissionDenied
+
+        can_close = (
+            (user.role == 'counsellor' and assignment.counsellor == user)
+            or (user.role == 'legal_advisor' and assignment.legal_advisor == user)
+        )
+        if not can_close:
+            raise PermissionDenied
+
+        help_request.status = 'closed'
+        help_request.save(update_fields=['status', 'updated_at'])
+        return redirect('assigned_cases')

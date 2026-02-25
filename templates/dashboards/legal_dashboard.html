@@ -3,9 +3,26 @@
 {% block content %}
 <section class="card">
 	<h2 class="title">Legal Advisor Dashboard</h2>
-	<p class="subtitle">Welcome, {{ request.user.username }}. Review assigned legal cases and provide timely guidance.</p>
+	<p class="subtitle">Welcome, {{ request.user.username }}. Handle legal assignments, track case progress, and close resolved matters.</p>
+
+	<div class="stats-grid">
+		<article class="stat-card">
+			<h3>Assigned Cases</h3>
+			<p>{{ assigned_total }}</p>
+		</article>
+		<article class="stat-card">
+			<h3>Active Cases</h3>
+			<p>{{ assigned_open }}</p>
+		</article>
+		<article class="stat-card">
+			<h3>Closed Cases</h3>
+			<p>{{ assigned_closed }}</p>
+		</article>
+	</div>
+
 	<div class="actions">
 		<a href="{% url 'assigned_cases' %}" class="btn">View Assigned Cases</a>
+		<a href="{% url 'resource_list' %}" class="btn btn-secondary">Legal Resources</a>
 	</div>
 </section>
 {% endblock %}
